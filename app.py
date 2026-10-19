@@ -110,7 +110,7 @@ while True:
             ), 
             yaxis=dict(range=[0, max(pm25_aktual)+10]) 
         )
-        placeholder_area.plotly_chart(fig_area, use_container_width=True)
+        placeholder_area.plotly_chart(fig_area, use_container_width=True, key=f"area_chart_{i}")
         
         # PERBAIKAN TYPO DI SINI ('text' dengan kutip yang benar)
         fig_gauge = go.Figure(go.Indicator(
@@ -135,7 +135,7 @@ while True:
             height=300,
             margin=dict(l=20, r=20, t=30, b=20)
         )
-        placeholder_gauge.plotly_chart(fig_gauge, use_container_width=True)
+        placeholder_gauge.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_chart_{i}")
         
         time.sleep(0.2)
         
