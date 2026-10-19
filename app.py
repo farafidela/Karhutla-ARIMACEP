@@ -74,69 +74,69 @@ log_data = pd.DataFrame({
 st.dataframe(log_data, use_container_width=True, hide_index=True)
 
 # ==========================================
-# 5. INFINITE LOOP ANIMASI
+# 5. ANIMASI STREAMING (AMAN DARI DUPLIKAT KEY)
 # ==========================================
-while True:
-    for i in range(48, len(waktu)+1, 48):
-        waktu_berjalan = waktu[:i]
-        pm25_berjalan = pm25_aktual[:i]
-        nilai_terakhir = pm25_berjalan[-1]
-        
-        fig_area = go.Figure()
-        fig_area.add_trace(go.Scatter(
-            x=waktu_berjalan, 
-            y=pm25_berjalan, 
-            fill='tozeroy', 
-            mode='lines',
-            line=dict(color='#00f2fe', width=1.5),
-            name='PM2.5'
-        ))
-        fig_area.add_hline(
-            y=threshold, 
-            line_dash="dash", 
-            line_color="red", 
-            annotation_text="Batas Bahaya",
-            annotation_font=dict(color="white")
-        )
-        fig_area.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#ffffff'),
-            height=300,
-            margin=dict(l=0, r=0, t=0, b=0),
-            xaxis=dict(
-                range=[waktu[0], waktu[-1]],
-                tickformat="%d %b %Y"
-            ), 
-            yaxis=dict(range=[0, max(pm25_aktual)+10]) 
-        )
-        placeholder_area.plotly_chart(fig_area, use_container_width=True, key=f"area_{i}_{time.time()}")
-        
-        # PERBAIKAN TYPO DI SINI ('text' dengan kutip yang benar)
-        fig_gauge = go.Figure(go.Indicator(
-            mode = "gauge+number",
-            value = nilai_terakhir,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Indeks PM2.5", 'font': {'color': 'white'}},
-            gauge = {
-                'axis': {'range': [None, max(pm25_aktual)+10], 'tickwidth': 1, 'tickcolor': "white"},
-                'bar': {'color': "#00f2fe"},
-                'bgcolor': "rgba(0,0,0,0)",
-                'borderwidth': 2,
-                'bordercolor': "gray",
-                'steps': [
-                    {'range': [0, threshold], 'color': "rgba(76, 175, 80, 0.3)"},
-                    {'range': [threshold, max(pm25_aktual)+10], 'color': "rgba(244, 67, 54, 0.3)"}],
-            }
-        ))
-        fig_gauge.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#ffffff'),
-            height=300,
-            margin=dict(l=20, r=20, t=30, b=20)
-        )
-        placeholder_gauge.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_{i}_{time.time()}")
-        
-        time.sleep(0.2)
-        
-    time.sleep(2)
+for i in range(48, len(waktu)+1, 48):
+    waktu_berjalan = waktu[:i]
+    pm25_berjalan = pm25_aktual[:i]
+    nilai_terakhir = pm25_berjalan[-1]
+    
+    fig_area = go.Figure()
+    fig_area.add_trace(go.Scatter(
+        x=waktu_berjalan, 
+        y=pm25_berjalan, 
+        fill='tozeroy', 
+        mode='lines',
+        line=dict(color='#00f2fe', width=1.5),
+        name='PM2.5'
+    ))
+    fig_area.add_hline(
+        y=threshold, 
+        line_dash="dash", 
+        line_color="red", 
+        annotation_text="Batas Bahaya",
+        annotation_font=dict(color="white")
+    )
+    fig_area.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#ffffff'),
+        height=300,
+        margin=dict(l=0, r=0, t=0, b=0),
+        xaxis=dict(
+            range=[waktu[0], waktu[-1]],
+            tickformat="%d %b %Y"
+        ), 
+        yaxis=dict(range=[0, max(pm25_aktual)+10]) 
+    )
+    
+    # KUNCI PERBAIKAN: Parameter key dengan time.time() ditambahkan ke plotly_chart
+    placeholder_area.plotly_chart(fig_area, use_container_width=True, key=f"area_{i}_{time.time()}")
+    
+    fig_gauge = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = nilai_terakhir,
+        domain = {'x': [0, 1], 'y': [0, 1]},
+        title = {'text': "Indeks PM2.5", 'font': {'color': 'white'}},
+        gauge = {
+            'axis': {'range': [None, max(pm25_aktual)+10], 'tickwidth': 1, 'tickcolor': "white"},
+            'bar': {'color': "#00f2fe"},
+            'bgcolor': "rgba(0,0,0,0)",
+            'borderwidth': 2,
+            'bordercolor': "gray",
+            'steps': [
+                {'range': [0, threshold], 'color': "rgba(76, 175, 80, 0.3)"},
+                {'range': [threshold, max(pm25_aktual)+10], 'color': "rgba(244, 67, 54, 0.3)"}],
+        }
+    ))
+    fig_gauge.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#ffffff'),
+        height=300,
+        margin=dict(l=20, r=20, t=30, b=20)
+    )
+    
+    # KUNCI PERBAIKAN: Parameter key dengan time.time() ditambahkan ke plotly_chart
+    placeholder_gauge.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_{i}_{time.time()}")
+    
+    time.sleep(0.1)
